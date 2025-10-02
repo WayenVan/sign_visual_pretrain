@@ -9,6 +9,11 @@ class SignPTTrainer(Trainer):
         super().__init__(*args, **kwargs)
         self._initialize_teacher()
 
+        if self.args.remove_unused_columns:
+            raise ValueError(
+                "remove_unused_columns should be set to False for SignPTTrainer."
+            )
+
     def _initialize_teacher(self):
         self.teacher_model = deepcopy(self.accelerator.unwrap_model(self.model)).to(
             self.accelerator.device
@@ -17,16 +22,16 @@ class SignPTTrainer(Trainer):
         for param in self.teacher_model.parameters():
             param.requires_grad = False
 
+    @torch.no_grad()
     def _update_teacher(self):
-        with torch.no_grad():
-            student_state_dict = self.accelerator.unwrap_model(self.model).state_dict()
-            teacher_state_dict = self.teacher_model.state_dict()
-            for key in student_state_dict.keys():
-                teacher_state_dict[key] = (
-                    self.args.alpha_teacher * teacher_state_dict[key]
-                    + (1 - self.args.alpha_teacher) * student_state_dict[key]
-                )
-            self.teacher_model.load_state_dict(teacher_state_dict)
+        student_state_dict = self.accelerator.unwrap_model(self.model).state_dict()
+        teacher_state_dict = self.teacher_model.state_dict()
+        for key in student_state_dict.keys():
+            teacher_state_dict[key] = (
+                self.args.alpha_teacher * teacher_state_dict[key]
+                + (1 - self.args.alpha_teacher) * student_state_dict[key]
+            )
+        self.teacher_model.load_state_dict(teacher_state_dict)
 
     @torch.no_grad()
     def _update_center(self, teacher_feats):

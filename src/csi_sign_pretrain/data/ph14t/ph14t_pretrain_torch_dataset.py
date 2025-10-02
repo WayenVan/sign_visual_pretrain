@@ -143,7 +143,9 @@ class Ph14TPretrainTorchDataset:
 
         import cv2
 
-        cv2.setNumThreads(1)
+        cv2.setNumThreads(
+            1
+        )  # NOTE: I know this looks awkward, but we need to avoid deadloack
 
         anchor_frame = cv2.imread(os.path.join(self.data_root, anchor_frame_file))
         anchor_frame = cv2.cvtColor(anchor_frame, cv2.COLOR_BGR2RGB)

@@ -21,7 +21,7 @@ def test_datamodule():
 
     loader = DataLoader(
         train_dataset,
-        batch_size=2,
+        batch_size=32,
         shuffle=True,
         num_workers=0,
         collate_fn=datamodule.collator,
@@ -31,6 +31,7 @@ def test_datamodule():
         # print(batch["input_ids"][0])
         # print(batch["labels"][0])
         print(batch["anchors"].shape)
+        print(batch["positives"].shape)
 
 
 if __name__ == "__main__":
