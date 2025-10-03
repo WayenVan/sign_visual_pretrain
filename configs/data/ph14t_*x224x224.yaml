@@ -8,6 +8,8 @@ train:
     _target_: csi_sign_pretrain.data.ph14t.ph14t_pretrain_torch_dataset.Ph14TPretrainTorchDataset
     data_root: ${data.data_root}
     mode: train
+    min_offset: 6
+    max_offset: 20
   pipline:
     _target_: csi_sign_pretrain.data.piplines.pretrain_pipline.PretrainPipline
     height: 224
@@ -18,6 +20,8 @@ val:
     _target_: csi_sign_pretrain.data.ph14t.ph14t_pretrain_torch_dataset.Ph14TPretrainTorchDataset
     data_root: ${data.data_root}
     mode: dev
+    min_offset: 6
+    max_offset: 20
   pipline:
     _target_: csi_sign_pretrain.data.piplines.pretrain_pipline.PretrainPipline
     height: 224
@@ -28,6 +32,8 @@ test:
     _target_: csi_sign_pretrain.data.ph14t.ph14t_pretrain_torch_dataset.Ph14TPretrainTorchDataset
     data_root: ${data.data_root}
     mode: test
+    min_offset: 6
+    max_offset: 20
   pipline:
     _target_: csi_sign_pretrain.data.piplines.pretrain_pipline.PretrainPipline
     height: 224

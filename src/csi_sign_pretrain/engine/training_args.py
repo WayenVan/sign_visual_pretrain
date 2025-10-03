@@ -45,6 +45,21 @@ class SignPretrainTrainingArguments(TrainingArguments):
         },
     )
 
+    temperature_student: float = field(
+        default=0.1,
+        metadata={
+            "help": "The temperature parameter for sharpening the student model's output distribution."
+            " Typical values are in the range [0.04, 0.2]."
+        },
+    )
+    temperature_teacher: float = field(
+        default=0.04,
+        metadata={
+            "help": "The temperature parameter for sharpening the teacher model's output distribution."
+            " Typical values are in the range [0.04, 0.2]."
+        },
+    )
+
     @staticmethod
     def __init_output_base_name():
         now = datetime.now()

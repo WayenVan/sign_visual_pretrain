@@ -146,7 +146,7 @@ class DinoV2WithTokenSampler(nn.Module):
         id,
         output_layer=-1,
         num_extra_queries=4,
-        num_hdeads=12,
+        num_heads=12,
         num_adapter_layers=2,
     ):
         super().__init__()
@@ -155,7 +155,7 @@ class DinoV2WithTokenSampler(nn.Module):
         self.token_sampler = TokenSampleAdapter(
             hidden_size=self.visual_encoder.config.hidden_size,
             target_hidden_size=self.visual_encoder.config.hidden_size,
-            num_heads=num_hdeads,
+            num_heads=num_heads,
             num_layers=num_adapter_layers,
             num_extra_queries=num_extra_queries,
             mlp_depth=1,
