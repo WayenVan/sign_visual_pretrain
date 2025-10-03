@@ -135,7 +135,7 @@ class SignPTTrainer(Trainer):
 
         # 5. 合并正负样本
         logits = torch.cat([pos_logits, neg_logits], dim=1)  # [B, 1+B_total]
-        logits /= temperature
+        logits /= self.args.temperature_teacher
 
         # 6. 标签
         labels = torch.zeros(logits.shape[0], dtype=torch.long).to(q.device)

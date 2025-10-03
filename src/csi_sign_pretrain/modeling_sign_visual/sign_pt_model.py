@@ -13,9 +13,6 @@ class SignVisualModelForPretrain(PreTrainedModel):
         super().__init__(config)
         self.config = config
         self.backbone = VISUAL_BACKBONES[config.backbone_type](**config.backbone_kwargs)
-        self.register_buffer(
-            "center", torch.zeros(1, config.projection_size)
-        )  # 初始化中心向量
         self.proj = torch.nn.Linear(config.hidden_size, config.projection_size)
 
     def forward(self, pixel_values, return_dict=False, projection=True, **kwargs):

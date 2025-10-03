@@ -4,7 +4,7 @@ training_args:
   per_device_eval_batch_size: 512
   report_to: wandb
   remove_unused_columns: False
-  ddp_find_unused_parameters: False
+  ddp_find_unused_parameters: True
   save_strategy: steps
   save_steps: 100
   save_total_limit: 1
@@ -18,8 +18,8 @@ training_args:
   lr_scheduler_type: linear
   alpha_teacher: 0.7
   alpha_center: 0.7
-  temperature_student: 0.1
-  temperature_teacher: 0.03
+  # temperature_student: 0.1
+  temperature_teacher: 0.07
   # do_eval: False
 
   # dataloader_persistent_workers: True
