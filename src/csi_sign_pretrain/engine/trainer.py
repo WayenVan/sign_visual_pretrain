@@ -29,6 +29,8 @@ class SignPTTrainer(Trainer):
         )
         self.add_callback(ModelInfoCallback())
         self.add_callback(SaveGitInfoCallback())
+        self.add_callback(SaveHydraConfigCallback(hydra_config))
+        self.add_callback(LogHydraConfigCallback(hydra_config))
 
         if self.args.remove_unused_columns:
             raise ValueError(

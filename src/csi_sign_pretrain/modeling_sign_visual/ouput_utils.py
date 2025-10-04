@@ -7,6 +7,5 @@ import torch
 @dataclass
 class SignPretrainOutput(ModelOutput):
     feats: torch.FloatTensor
-    projection_feats: torch.FloatTensor | None = None
     unpooled_feats: torch.FloatTensor | None = None
     attentions: tuple[torch.FloatTensor] | None = None

@@ -18,9 +18,10 @@ with app.setup:
         SignVisualModelForPretrain,
     )
     import torch.nn.functional as F
+    from sklearn.decomposition import PCA
 
-    CHECKPOINT_PATH = "/root/projects/sign_langauge_visual_pretrain/outputs/first_demo_ft/2025-10-03_19-58-51/checkpoint-400"
-    BATCH_SIZE = 8
+    CHECKPOINT_PATH = "/root/projects/sign_langauge_visual_pretrain/outputs/info_nce_pretrain/2025-10-03_20-49-41/checkpoint-4200"
+    BATCH_SIZE = 1
     print("Current working directory:", os.getcwd())
 
 
@@ -29,7 +30,7 @@ def _():
     with hydra.initialize(
         config_path="../../root/projects/sign_langauge_visual_pretrain/configs"
     ):
-        cfg = hydra.compose(config_name="base_train")
+        cfg = hydra.compose(config_name="base_eval")
         cfg.data.data_root = "/root/projects/sign_langauge_visual_pretrain/dataset/PHOENIX-2014-T-release-v3"
 
     datamodule = DataModule(
@@ -54,45 +55,38 @@ def _(loader):
 
     with torch.no_grad():
         for batch in loader:
-            anchors = batch["anchors"]
-            positives = batch["positives"]
-            student_feats = model(anchors).projection_feats
-            teacher_feats = model(positives).projection_feats
+            pixel_values = batch["pixel_values"]  # (B, C, H, W)
+            feats = model(pixel_values=pixel_values).feats  # (B, D)
             break
-    print("Anchor features shape:", student_feats.shape)
-    print("Positive features shape:", teacher_feats.shape)
-    return student_feats, teacher_feats
+    return feats
 
 
 @app.cell
-def visualize_logits(student_feats, teacher_feats):
-    student_prob = F.softmax(student_feats, dim=-1)
-    teacher_prob = F.softmax(teacher_feats, dim=-1)
+def visualize_logits(feats):
+    pca = PCA(n_components=2)
+    X_pca = pca.fit_transform(feats.numpy())
 
-    plt.figure(figsize=(12, 6))
-    plt.subplot(1, 2, 1)
-    plt.title("Student Probabilities")
-    plt.imshow(student_prob.numpy(), aspect="auto", cmap="hot")
+    # 绘制散点图
+    plt.figure(figsize=(12, 12))
+    plt.scatter(X_pca[:, 0], X_pca[:, 1], alpha=0.6, c="blue")
 
-    plt.subplot(1, 2, 2)
-    plt.title("Teacher Probabilities")
-    plt.imshow(teacher_prob.numpy(), aspect="auto", cmap="hot")
+    # 给每个点加上索引
+    for i in range(X_pca.shape[0]):
+        plt.text(X_pca[i, 0] + 0.02, X_pca[i, 1] + 0.02, str(i), fontsize=9)
 
-    plt.colorbar()
+    plt.xlabel("PC1")
+    plt.ylabel("PC2")
+    plt.title("PCA with Sample Index")
     plt.show()
-    return
 
 
 @app.function
 def tensor_to_image(image):
     image = image.clone()
-    image = image.permute(0, 2, 3, 1)  # C, H, W to H, W, C
+    image = image.permute(0, 2, 3, 1)  # B, C, H, W to H, W, C
     image = image * 0.5 + 0.5  # assuming mean=0.5, std=0.5
     image = image.clamp(0, 1)
     image = image.numpy()
-    # for i in range(image.shape[0]):
-    #     image[i] = cv2.cvtColor(image[i], cv2.COLOR_RGB2BGR)
-    # image = image[..., ::-1]  # RGB to BGR
     return image
 
 

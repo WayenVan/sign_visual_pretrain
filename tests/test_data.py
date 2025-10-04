@@ -34,5 +34,31 @@ def test_datamodule():
         print(batch["positives"].shape)
 
 
+def test_datamodule_video():
+    with hydra.initialize(config_path="../configs"):
+        cfg = hydra.compose(config_name="base_eval")
+
+    datamodule = DataModule(
+        cfg.data,
+    )
+    datamodule.setup("train")
+    train_dataset = datamodule.train_dataset
+
+    loader = DataLoader(
+        train_dataset,
+        batch_size=2,
+        shuffle=True,
+        num_workers=0,
+        collate_fn=datamodule.collator,
+    )
+
+    for batch in loader:
+        # print(batch["input_ids"][0])
+        # print(batch["labels"][0])
+        print(batch["pixel_values"].shape)
+        print(batch["pixel_values_length"].shape)
+
+
 if __name__ == "__main__":
-    test_datamodule()
+    # test_datamodule()
+    test_datamodule_video()

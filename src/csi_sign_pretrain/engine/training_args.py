@@ -37,21 +37,6 @@ class SignPretrainTrainingArguments(TrainingArguments):
         },
     )
 
-    alpha_center: float = field(
-        default=0.9,
-        metadata={
-            "help": "The momentum coefficient for updating the feature center."
-            " Typical values are in the range [0.9, 0.99]."
-        },
-    )
-
-    # temperature_student: float = field(
-    #     default=0.1,
-    #     metadata={
-    #         "help": "The temperature parameter for sharpening the student model's output distribution."
-    #         " Typical values are in the range [0.04, 0.2]."
-    #     },
-    # )
     temperature_teacher: float = field(
         default=0.04,
         metadata={

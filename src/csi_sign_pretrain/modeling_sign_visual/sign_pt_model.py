@@ -13,16 +13,13 @@ class SignVisualModelForPretrain(PreTrainedModel):
         super().__init__(config)
         self.config = config
         self.backbone = VISUAL_BACKBONES[config.backbone_type](**config.backbone_kwargs)
-        self.proj = torch.nn.Linear(config.hidden_size, config.projection_size)
 
-    def forward(self, pixel_values, return_dict=False, projection=True, **kwargs):
+    def forward(self, pixel_values, return_dict=False, **kwargs):
         feats = self.backbone(pixel_values)
 
-        projection_feats = self.proj(feats) if projection else None
-
         if not return_dict:
-            return SignPretrainOutput(feats=feats, projection_feats=projection_feats)
-        return dict(feats=feats, projection_feats=projection_feats)
+            return SignPretrainOutput(feats=feats)
+        return dict(feats=feats)
 
     @property
     def dummy_inputs(self):

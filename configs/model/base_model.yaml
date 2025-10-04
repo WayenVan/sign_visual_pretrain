@@ -1,6 +1,5 @@
 config:
   hidden_size: 768
-  projection_size: 1024
   backbone_type: dinov2-with-token-sampler
   backbone_kwargs:
     id: facebook/dinov2-with-registers-base

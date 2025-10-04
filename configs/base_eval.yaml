@@ -1,8 +1,8 @@
 defaults:
-  - model: base_model
+  # - model: base_model
   # - data: ph14t_*x224x224_gemmaslt_multiling
-  - data: ph14t_*x224x224_pt
-  - engine: base_engine
+  - data: ph14t_*x224x224_video
+  # - engine: base_engine
   - override hydra/hydra_logging: none
   - override hydra/job_logging: none
   - _self_
