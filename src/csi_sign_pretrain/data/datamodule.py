@@ -14,12 +14,6 @@ class DataModule:
         super().__init__()
         self.cfg = cfg
 
-        self.pipline_train = instantiate(getattr(cfg.train, "pipline", None))
-        self.pipline_val = instantiate(getattr(cfg.val, "pipline", None))
-        self.pipline_test = instantiate(
-            getattr(cfg.test, "pipline", cfg.val.pipline),
-        )
-
     @staticmethod
     def get_fraction_subset_dataset(
         dataset, labels=None, fraction=0.3, stratify=True, random_state=None
@@ -67,12 +61,8 @@ class DataModule:
     def setup(self, stage: Literal["train", "test", None] = None):
         # Set up the dataset for training, validation, and testing
         if stage == "train" or stage is None:
-            self.train_dataset = instantiate(
-                self.cfg.train.dataset, pipline=self.pipline_train
-            )
-            self.val_dataset = instantiate(
-                self.cfg.val.dataset, pipline=self.pipline_val
-            )
+            self.train_dataset = instantiate(self.cfg.train.dataset)
+            self.val_dataset = instantiate(self.cfg.val.dataset)
             if self.cfg.fraction_dataset:
                 # If fraction_dataset is True, create a subset of the training dataset
                 #
@@ -90,9 +80,7 @@ class DataModule:
 
         if stage == "test" or stage is None:
             if self.cfg.test is not None:
-                self.test_dataset = instantiate(
-                    self.cfg.test.dataset, pipline=self.pipline_test
-                )
+                self.test_dataset = instantiate(self.cfg.test.dataset)
                 if self.cfg.fraction_dataset:
                     # If fraction_dataset is True, create a subset of the test dataset
                     if self.cfg.test_fraction < 1.0:
@@ -102,5 +90,34 @@ class DataModule:
                         )
 
     @property
-    def collator(self):
-        return instantiate(self.cfg.collator)
+    def train_processor(self):
+        return instantiate(
+            self.cfg.train.processor,
+        )
+
+    @property
+    def val_processor(self):
+        return instantiate(
+            self.cfg.val.processor,
+        )
+
+    @property
+    def test_processor(self):
+        return instantiate(
+            self.cfg.test.processor,
+        )
+
+    @property
+    def train_collator(self):
+        return instantiate(
+            self.cfg.train.collator,
+            processor=self.train_processor,
+        )
+
+    @property
+    def val_collator(self):
+        return instantiate(self.cfg.val.collator, processor=self.val_processor)
+
+    @property
+    def test_collator(self):
+        return instantiate(self.cfg.test.collator, processor=self.test_processor)

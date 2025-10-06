@@ -27,9 +27,8 @@ with app.setup:
 
 @app.cell
 def _():
-    with hydra.initialize(
-        config_path="../../root/projects/sign_langauge_visual_pretrain/configs"
-    ):
+    CONFIG_DIR = os.path.abspath("../configs")
+    with hydra.initialize_config_dir(config_dir=CONFIG_DIR):
         cfg = hydra.compose(config_name="base_eval")
         cfg.data.data_root = "/root/projects/sign_langauge_visual_pretrain/dataset/PHOENIX-2014-T-release-v3"
 
@@ -37,14 +36,14 @@ def _():
         cfg.data,
     )
     datamodule.setup("train")
-    train_dataset = datamodule.train_dataset
+    train_dataset = datamodule.val_dataset
 
     loader = DataLoader(
         train_dataset,
         batch_size=BATCH_SIZE,
         shuffle=True,
         num_workers=0,
-        collate_fn=datamodule.collator,
+        collate_fn=datamodule.val_collator,
     )
     return (loader,)
 

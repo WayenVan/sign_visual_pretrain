@@ -1,8 +1,5 @@
 data_root: dataset/PHOENIX-2014-T-release-v3
 
-collator:
-  _target_: csi_sign_pretrain.data.collators.pretrain_collator.PretrainCollator
-
 train:
   dataset:
     _target_: csi_sign_pretrain.data.ph14t.ph14t_pretrain_torch_dataset.Ph14TPretrainTorchDataset
@@ -10,10 +7,12 @@ train:
     mode: train
     min_offset: 6
     max_offset: 20
-  pipline:
-    _target_: csi_sign_pretrain.data.piplines.pretrain_pipline.PretrainPipline
+  processor:
+    _target_: csi_sign_pretrain.data.processors.processor.SignPretrainImageProcessor
     height: 224
     width: 224
+  collator:
+    _target_: csi_sign_pretrain.data.collators.pretrain_collator.PretrainCollator
 
 val:
   dataset:
@@ -22,10 +21,12 @@ val:
     mode: dev
     min_offset: 6
     max_offset: 20
-  pipline:
-    _target_: csi_sign_pretrain.data.piplines.pretrain_pipline.PretrainPipline
+  processor:
+    _target_: csi_sign_pretrain.data.processors.processor.SignPretrainImageProcessor
     height: 224
     width: 224
+  collator:
+    _target_: csi_sign_pretrain.data.collators.pretrain_collator.PretrainCollator
 
 test:
   dataset:
@@ -34,10 +35,12 @@ test:
     mode: test
     min_offset: 6
     max_offset: 20
-  pipline:
-    _target_: csi_sign_pretrain.data.piplines.pretrain_pipline.PretrainPipline
+  processor:
+    _target_: csi_sign_pretrain.data.processors.processor.SignPretrainImageProcessor
     height: 224
     width: 224
+  collator:
+    _target_: csi_sign_pretrain.data.collators.pretrain_collator.PretrainCollator
 
 fraction_dataset: False
 train_fraction: 1.0

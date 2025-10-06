@@ -45,7 +45,7 @@ def main(cfg: DictConfig):
         hydra_config=cfg,
         train_dataset=datamodule.train_dataset,
         eval_dataset=datamodule.val_dataset,
-        data_collator=datamodule.collator,
+        data_collator=datamodule.train_collator,
     )
 
     # trainer.evaluate()

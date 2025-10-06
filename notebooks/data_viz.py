@@ -1,10 +1,9 @@
 import marimo
 
-__generated_with = "0.15.2"
+__generated_with = "0.16.5"
 app = marimo.App(width="medium")
 
-
-with app.setup():
+with app.setup:
     import os
     import marimo as mo
     import hydra
@@ -22,11 +21,12 @@ with app.setup():
 
 @app.cell
 def _():
-    with hydra.initialize(
-        config_path="../../root/projects/sign_langauge_visual_pretrain/configs"
+    CONFIG_DIR = os.path.abspath("../configs")
+    with hydra.initialize_config_dir(
+        config_dir=CONFIG_DIR,
     ):
         cfg = hydra.compose(config_name="base_train")
-        cfg.data.data_root = "/root/projects/sign_langauge_visual_pretrain/dataset/PHOENIX-2014-T-release-v3"
+        cfg.data.data_root = "/home/2533494W/project/sign_visual_pretrain/dataset/PHOENIX-2014-T-release-v3"
 
     datamodule = DataModule(
         cfg.data,
@@ -39,9 +39,9 @@ def _():
         batch_size=BATCH_SIZE,
         shuffle=True,
         num_workers=0,
-        collate_fn=datamodule.collator,
+        collate_fn=datamodule.train_collator,
     )
-    return
+    return (loader,)
 
 
 @app.function
@@ -78,6 +78,12 @@ def visualize_batch(loader):
         axes[b, 1].set_title("Positive")
     plt.tight_layout()
     plt.show()
+    return
+
+
+@app.cell
+def _():
+    return
 
 
 if __name__ == "__main__":

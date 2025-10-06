@@ -24,7 +24,7 @@ def test_datamodule():
         batch_size=32,
         shuffle=True,
         num_workers=0,
-        collate_fn=datamodule.collator,
+        collate_fn=datamodule.train_collator,
     )
 
     for batch in loader:
@@ -49,14 +49,14 @@ def test_datamodule_video():
         batch_size=2,
         shuffle=True,
         num_workers=0,
-        collate_fn=datamodule.collator,
+        collate_fn=datamodule.train_collator,
     )
 
     for batch in loader:
         # print(batch["input_ids"][0])
         # print(batch["labels"][0])
         print(batch["pixel_values"].shape)
-        print(batch["pixel_values_length"].shape)
+        print(batch["pixel_values_length"])
 
 
 if __name__ == "__main__":
