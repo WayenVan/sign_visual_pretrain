@@ -20,7 +20,7 @@ with app.setup:
     import torch.nn.functional as F
     from sklearn.decomposition import PCA
 
-    CHECKPOINT_PATH = "/root/projects/sign_langauge_visual_pretrain/outputs/info_nce_pretrain/2025-10-03_20-49-41/checkpoint-4200"
+    CHECKPOINT_PATH = "/root/projects/sign_langauge_visual_pretrain/outputs/info_nce_pretrain/2025-10-04_03-47-05/checkpoint-10500"
     BATCH_SIZE = 1
     print("Current working directory:", os.getcwd())
 
@@ -58,6 +58,7 @@ def _(loader):
             pixel_values = batch["pixel_values"]  # (B, C, H, W)
             feats = model(pixel_values=pixel_values).feats  # (B, D)
             break
+    feats = F.normalize(feats, dim=-1)
     return feats
 
 
@@ -67,7 +68,7 @@ def visualize_logits(feats):
     X_pca = pca.fit_transform(feats.numpy())
 
     # 绘制散点图
-    plt.figure(figsize=(12, 12))
+    plt.figure(figsize=(10, 10))
     plt.scatter(X_pca[:, 0], X_pca[:, 1], alpha=0.6, c="blue")
 
     # 给每个点加上索引
