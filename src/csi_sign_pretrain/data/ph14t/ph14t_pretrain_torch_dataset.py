@@ -3,6 +3,7 @@ from typing import List, Tuple
 import os
 from datasets import load_dataset
 import numpy
+import pyspng
 
 
 def sample_anchor_with_positives_in_segment(
@@ -141,16 +142,14 @@ class Ph14TPretrainTorchDataset:
         anchor_frame_file = video_frame_file_name[anchor]
         positive_frame_file = video_frame_file_name[positive]
 
-        import cv2
-
-        cv2.setNumThreads(
-            1
-        )  # NOTE: I know this looks awkward, but we need to avoid deadloack
-
-        anchor_frame = cv2.imread(os.path.join(self.data_root, anchor_frame_file))
-        anchor_frame = cv2.cvtColor(anchor_frame, cv2.COLOR_BGR2RGB)
-        positive_frame = cv2.imread(os.path.join(self.data_root, positive_frame_file))
-        positive_frame = cv2.cvtColor(positive_frame, cv2.COLOR_BGR2RGB)
+        # anchor_frame = cv2.imread(os.path.join(self.data_root, anchor_frame_file))
+        # anchor_frame = cv2.cvtColor(anchor_frame, cv2.COLOR_BGR2RGB)
+        # positive_frame = cv2.imread(os.path.join(self.data_root, positive_frame_file))
+        # positive_frame = cv2.cvtColor(positive_frame, cv2.COLOR_BGR2RGB)
+        anchor_frame = self.read_png(os.path.join(self.data_root, anchor_frame_file))
+        positive_frame = self.read_png(
+            os.path.join(self.data_root, positive_frame_file)
+        )
 
         ret = dict(
             id=id,
@@ -164,6 +163,13 @@ class Ph14TPretrainTorchDataset:
             ret = self.pipline(ret)
 
         return ret
+
+    @staticmethod
+    def read_png(file_name: str):
+        with open(file_name, "rb") as f:
+            image = pyspng.load(f.read())
+        image = image[:, :, :3]
+        return image
 
 
 if __name__ == "__main__":

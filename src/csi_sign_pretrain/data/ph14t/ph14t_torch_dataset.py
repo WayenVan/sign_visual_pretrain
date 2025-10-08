@@ -2,6 +2,7 @@ from torch.utils.data import Dataset
 import numpy
 import os
 from datasets import load_dataset
+import pyspng
 
 
 class Ph14TGeneralDataset(Dataset):
@@ -30,13 +31,9 @@ class Ph14TGeneralDataset(Dataset):
 
         video_frame_file_name = data_info["frames"]
         video_frame = []
-        import cv2
-
-        cv2.setNumThreads(1)
 
         for frame_file in video_frame_file_name:
-            image = cv2.imread(os.path.join(self.data_root, frame_file))
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            image = self.read_png(os.path.join(self.data_root, frame_file))
             video_frame.append(image)
 
         ret = dict(
@@ -51,6 +48,13 @@ class Ph14TGeneralDataset(Dataset):
             ret = self.pipline(ret)
 
         return ret
+
+    @staticmethod
+    def read_png(file_name: str):
+        with open(file_name, "rb") as f:
+            image = pyspng.load(f.read())
+        image = image[:, :, :3]
+        return image
 
 
 if __name__ == "__main__":
