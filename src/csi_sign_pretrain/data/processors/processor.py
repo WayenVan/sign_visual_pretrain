@@ -12,6 +12,7 @@ from albumentations import (
     RandomResizedCrop,
     Resize,
     ToTensorV2,
+    VerticalFlip,
 )
 from transformers.image_processing_utils import BaseImageProcessor, BatchFeature
 from transformers.utils import TensorType, filter_out_non_signature_kwargs
@@ -36,7 +37,7 @@ class SignPretrainImageProcessor(BaseImageProcessor):
     def anchor_transform(self):
         return Compose(
             [
-                Resize(height=256, width=256),
+                # Resize(height=256, width=256),
                 RandomResizedCrop(
                     size=(self.height, self.width),
                     scale=(0.3, 0.6),
@@ -50,6 +51,7 @@ class SignPretrainImageProcessor(BaseImageProcessor):
                     max_pixel_value=1.0,
                 ),
                 HorizontalFlip(p=0.5),
+                VerticalFlip(p=0.5),
             ],
             p=1.0,
         )
@@ -58,7 +60,7 @@ class SignPretrainImageProcessor(BaseImageProcessor):
     def positive_transform(self):
         return Compose(
             [
-                Resize(height=256, width=256),
+                # Resize(height=256, width=256),
                 RandomResizedCrop(
                     size=(self.height, self.width),
                     scale=(0.5, 1.0),
@@ -72,6 +74,7 @@ class SignPretrainImageProcessor(BaseImageProcessor):
                     max_pixel_value=1.0,
                 ),
                 HorizontalFlip(p=0.5),
+                VerticalFlip(p=0.5),
             ],
             p=1.0,
         )

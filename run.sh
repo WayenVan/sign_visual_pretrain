@@ -4,7 +4,8 @@ export PYTHONPATH=./src:$PYTHONPATH
 
 accelerate launch --num_processes=2 --mixed_precision=fp16 \
 	-m csi_sign_pretrain.commands.train \
-	engine.training_args.auto_output_root=./outputs/info_nce_pretrain
+	engine.training_args.auto_output_root=./outputs/info_nce_pretrain \
+	engine.training_args.num_train_epochs=1000
 # accelerate launch --num_processes=2 --mixed_precision=fp16 \
 # 	engine.training_args.auto_output_root=./outputs/first_demo_ft
 # accelerate launch --num_processes=2 --mixed_precision=fp16 \

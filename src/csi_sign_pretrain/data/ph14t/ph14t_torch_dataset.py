@@ -33,6 +33,7 @@ class Ph14TGeneralDataset(Dataset):
         video_frame = []
 
         for frame_file in video_frame_file_name:
+            frame_file = frame_file.replace("210x260px", "256x256px")
             image = self.read_png(os.path.join(self.data_root, frame_file))
             video_frame.append(image)
 

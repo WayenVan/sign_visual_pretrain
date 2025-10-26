@@ -42,6 +42,7 @@ def main(cfg: DictConfig):
     trainer = SignPTTrainer(
         model=model,
         args=training_args,
+        processing_class=datamodule.train_processor,
         hydra_config=cfg,
         train_dataset=datamodule.train_dataset,
         eval_dataset=datamodule.val_dataset,
