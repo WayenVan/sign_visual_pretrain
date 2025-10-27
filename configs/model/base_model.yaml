@@ -5,5 +5,5 @@ config:
     id: facebook/dinov2-with-registers-base
     output_layer: -2
     num_heads: 12
-    num_adapter_layers: 1
+    num_adapter_layers: 2
     num_extra_queries: 4
