@@ -12,7 +12,7 @@ training_args:
   eval_strategy: "no"
   # eval_steps: 2000
   learning_rate: 1e-4
-  dataloader_num_workers: 4
+  dataloader_num_workers: 6
   auto_output_dir: True
   auto_output_root: outputs/demos
   lr_scheduler_type: linear
