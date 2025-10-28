@@ -1,0 +1,5 @@
+config:
+  hidden_size: 512
+  backbone_type: resnet
+  backbone_kwargs:
+    id: microsoft/resnet-18

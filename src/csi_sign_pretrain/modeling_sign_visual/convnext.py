@@ -1,6 +1,8 @@
 from torch import nn
 import torch
 import timm
+from timm.models.convnext import ConvNeXt
+
 
 import logging
 
@@ -10,11 +12,11 @@ logger = logging.getLogger(__name__)
 class ConvNextBackbone(nn.Module):
     def __init__(self, id="convnext_tiny", pretrained: bool = True):
         super().__init__()
-        self.model = timm.create_model(id, pretrained=pretrained)
+        self.model: ConvNeXt = timm.create_model(id, pretrained=pretrained)
 
     def forward(self, x: torch.Tensor):
         feats = self.model.forward_features(x)
-        feats = feats.mean(dim=(2, 3))  # Global average pooling
+        feats = feats.mean(dim=(2, 3)).contiguous()  # Global average pooling
         return feats
 
 
